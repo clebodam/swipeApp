@@ -21,9 +21,12 @@ enum NetworkError: Error {
     case noData
     case serialization
 }
-typealias CompletionBlock = ([Profile], NetworkError?) -> ()
+
+typealias GetResponse = ([Profile], NetworkError?) -> Void
+typealias PostResponse = (Result<String, Error>) -> Void
+
 protocol NetWorkManagerProtocol {
-    func getData(completion: @escaping CompletionBlock)
+    func getData(completion: @escaping GetResponse)
     func postLike(_ uid: String, _ like:Bool,  callback: ((Result<String, Error>) -> Void)?) 
 }
 
@@ -90,7 +93,7 @@ class NetWorkManager: NetWorkManagerProtocol {
     }
 
 
-    public func postLike(_ uid: String, _ like:Bool,  callback: ((Result<String, Error>) -> Void)?) {
+    public func postLike(_ uid: String, _ like:Bool,  callback: PostResponse?) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = PROFILES_HOST
@@ -130,7 +133,7 @@ class NetWorkManager: NetWorkManagerProtocol {
         currentTask?.resume()
     }
 
-    public  func getData(completion: @escaping CompletionBlock){
+    public  func getData(completion: @escaping GetResponse){
 
         var profiles = [Profile]()
         var netWorkError: NetworkError? = nil
@@ -140,7 +143,6 @@ class NetWorkManager: NetWorkManagerProtocol {
                 profiles = response
             case .failure(let error):
                 netWorkError = error as? NetworkError
-                print("fetch drivers fail from intenet")
             }
             completion(profiles, netWorkError)
         }

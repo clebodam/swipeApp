@@ -62,21 +62,12 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
         interactor?.resetTapped()
     }
 
-    func goToDetails() {
-        if let homeCoordinator = coordinator as? HomeCoordinator {
-            //homeCoordinator.goToDetails()
-        }
-    }
 }
-
-
 
 extension HomeViewController: SwipeCardContainerDelegate {
 
     func didTap(on view: SwipeCardView, model: Profile?) {
         self.interactor?.didTap(on: view, model: model)
-        goToDetails()
-
     }
 
     func didSwipe(model: Profile?, direction: Direction) {
