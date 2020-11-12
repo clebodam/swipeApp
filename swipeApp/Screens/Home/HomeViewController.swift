@@ -14,10 +14,8 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
     var reloadButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red:0.93, green:0.93, blue:0.93, alpha:1.0)
         view.addSubview(stackContainer)
         configureStackContainer()
-        stackContainer.translatesAutoresizingMaskIntoConstraints = false
         configureNavigationBarButtonItem()
         stackContainer.delegate = self
         stackContainer.reloadData()
@@ -34,6 +32,7 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
     }
 
     func configureStackContainer() {
+        stackContainer.translatesAutoresizingMaskIntoConstraints = false
         stackContainer.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: self.topbarHeight + 5, paddingLeft: 5, paddingBottom: 50, paddingRight: 5, width: 0, height: 0, enableInsets: false)
         self.view.layoutIfNeeded()
     }
