@@ -30,6 +30,14 @@ class HomePresenter : Presenter {
             self.homeScreen?.stackContainer.reloadData()
         }
     }
+
+    func startLoading() {
+        self.homeScreen?.startLoading()
+    }
+
+    func stopLoading() {
+        self.homeScreen?.stopLoading()
+    }
 }
 
 extension HomePresenter : SwipeCardsDataSource {

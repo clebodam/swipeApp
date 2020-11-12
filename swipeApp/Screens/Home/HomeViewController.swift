@@ -11,6 +11,7 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
     var coordinator: Coordinator?
     let stackContainer = SwipeCardContainer()
     var interactor : HomeInteractor?
+    var reloadButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red:0.93, green:0.93, blue:0.93, alpha:1.0)
@@ -38,13 +39,25 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
     }
 
     func configureNavigationBarButtonItem() {
-        let button1 = UIButton()
-        button1.addTarget(self, action: #selector(resetTapped), for: .touchUpInside)
-        button1.setImage(UIImage(named: "refresh"), for: UIControl.State())
-        navigationItem.leftBarButtonItem =  UIBarButtonItem(customView: button1)
+        reloadButton = UIButton()
+        reloadButton.addTarget(self, action: #selector(resetTapped), for: .touchUpInside)
+        reloadButton.setImage(UIImage(named: "refresh"), for: UIControl.State())
+        navigationItem.leftBarButtonItem =  UIBarButtonItem(customView: reloadButton)
     }
 
+    func startLoading() {
+        DispatchQueue.main.async {
+                self.reloadButton.infiniteRotate()
+            }
+    }
 
+    func stopLoading() {
+        DispatchQueue.main.async {
+                self.reloadButton.removeAllAnimations()
+            }
+    }
+
+    
     @objc func resetTapped() {
         interactor?.resetTapped()
     }

@@ -47,3 +47,19 @@ extension UIViewController {
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
     }
 }
+
+extension UIView {
+    func infiniteRotate() { //CABasicAnimation
+        let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
+        rotationAnimation.fromValue = 0.0
+        rotationAnimation.toValue = Double.pi * 2
+        rotationAnimation.duration = 0.5
+        rotationAnimation.repeatCount = .infinity
+        self.layer.add(rotationAnimation, forKey: nil)
+    }
+
+    func removeAllAnimations() {
+        self.layer.removeAllAnimations()
+    }
+}
+

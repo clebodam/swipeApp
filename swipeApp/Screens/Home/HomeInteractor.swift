@@ -45,9 +45,11 @@ class HomeInteractor: Interactor {
     }
 
     func getData() {
+        self.homePresenter?.startLoading()
         worker?.getData(completion: { profiles, error in
             self.homePresenter?.viewModelData = profiles
             self.homePresenter?.reloadData()
+            self.homePresenter?.stopLoading()
 
         })
     }

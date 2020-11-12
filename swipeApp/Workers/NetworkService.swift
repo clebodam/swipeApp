@@ -119,8 +119,8 @@ class NetWorkManager: NetWorkManagerProtocol {
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
         request.httpBody = jsonData
         _currentTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
-            if let e = error {
-                callback?(Result.failure(e))
+            if let error = error {
+                callback?(Result.failure(error))
                 return
             }
             guard let response = response as? HTTPURLResponse  else {
