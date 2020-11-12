@@ -21,7 +21,7 @@ class HomeInteractor: Interactor {
     }
 
     func resetTapped() {
-        homePresenter?.reloadData()
+        getData()
     }
 
     func didSwipe(model: Profile?, direction: Direction) {

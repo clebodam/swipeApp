@@ -38,7 +38,7 @@ class SwipeCardView : UIView {
     var paging = UIPageControl()
     var dataSource : Profile? {
         didSet {
-            swipeView.backgroundColor = UIColor.randomColor(seed:  dataSource?.name ?? "")
+          
             emojilabel.text = "   \(dataSource?.emojis.joined(separator: " ") ?? "")"
             locationlabel.text = "   \(dataSource?.location.uppercased() ?? ""), \(dataSource?.town ?? "")"
             let imageUrl = dataSource?.photos.first?.url ?? ""
@@ -130,9 +130,9 @@ class SwipeCardView : UIView {
         locationlabel.textAlignment = .left
         locationlabel.font = UIFont.systemFont(ofSize: 18)
         locationlabel.translatesAutoresizingMaskIntoConstraints = false
-
         locationlabel.anchor(top: nil, left: swipeView.leftAnchor, bottom: emojilabel.topAnchor, right: swipeView.rightAnchor, paddingTop:0 , paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 40, enableInsets: false)
     }
+
     func setupNameLabel() {
         swipeView.addSubview(nameLabel)
         nameLabel.backgroundColor = UIColor.black.withAlphaComponent(0.4)

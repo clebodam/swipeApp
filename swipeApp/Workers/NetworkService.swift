@@ -41,7 +41,6 @@ class NetWorkManager: NetWorkManagerProtocol {
     private let DISLIKE_PATH =
         "/dislike"
 
-
     private var _currentTask: URLSessionDataTask?
 
     init() {
@@ -52,49 +51,45 @@ class NetWorkManager: NetWorkManagerProtocol {
 
     internal  func get( route: String, callback: ((Result<[Profile], Error>) -> Void)?) {
         if let task = _currentTask { task.cancel() }
-        if let url = URL(string: route) {
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            _currentTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
-                if let e = error {
-                    callback?(Result.failure(e))
-                }else {
-                    if let r = response as? HTTPURLResponse {
-                        if  r.statusCode == 200{
-                            if let data = data {
-                                do {
-                                    var result = [Profile]()
-                                    if let json = self.convertToDictionary(data: data) {
-                                        let profilesJson: AnyObject? =  json["data"] as AnyObject
-                                        if let  profilesData =  self.jsonToData(json: profilesJson) {
-                                            let decoder = JSONDecoder()
-                                            result = try decoder.decode([Profile].self, from: profilesData)
-                                        }
-                                        callback?(Result.success(result))
-                                    }
-
-                                } catch {
-                                    print(error)
-                                    callback?(Result.failure(NetworkError.serialization))
-                                }
-                            } else {
-                                callback?(Result.failure(NetworkError.noData))
-                            }
-                        }else {
-                            callback?(Result.failure(NetworkError.invalidStatusCode))
-                        }
-                    }else {
-                        callback?(Result.failure(NetworkError.invalidResponse))
-                    }
-                }
-            })
-
-            _currentTask?.resume()
-
-        }else {
+        guard let url = URL(string: route) else {
             callback?(Result.failure(NetworkError.badUrl))
+            return
         }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        _currentTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
+            if let e = error {
+                callback?(Result.failure(e))
+                return
+            }
+            guard let response = response as? HTTPURLResponse  else {
+                callback?(Result.failure(NetworkError.invalidResponse))
+                return
+            }
+            if response.statusCode == 200 {
+                guard let data = data  else {
+                    callback?(Result.failure(NetworkError.noData))
+                    return
+                }
+                do {
+                    var result = [Profile]()
+                    if let json = self.convertToDictionary(data: data) {
+                        let profilesJson: AnyObject? =  json["data"] as AnyObject
+                        if let  profilesData =  self.jsonToData(json: profilesJson) {
+                            let decoder = JSONDecoder()
+                            result = try decoder.decode([Profile].self, from: profilesData)
+                        }
+                        callback?(Result.success(result))
+                    }
+                } catch {
+                    print(error)
+                    callback?(Result.failure(NetworkError.serialization))
+                }
+            } else {
+                callback?(Result.failure(NetworkError.invalidStatusCode))
+            }
+        })
+        _currentTask?.resume()
     }
 
     public func getProfiles(callback: ((Result<[Profile], Error>) -> Void)?) {
@@ -109,7 +104,7 @@ class NetWorkManager: NetWorkManagerProtocol {
     }
 
 
-    func postLike(_ uid: String, _ like:Bool,  callback: ((Result<String, Error>) -> Void)?) {
+    public func postLike(_ uid: String, _ like:Bool,  callback: ((Result<String, Error>) -> Void)?) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = PROFILES_HOST
@@ -126,27 +121,25 @@ class NetWorkManager: NetWorkManagerProtocol {
         _currentTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
             if let e = error {
                 callback?(Result.failure(e))
-            }else {
-                if let r = response as? HTTPURLResponse {
-                    if  r.statusCode == 200{
-                        if let data = data {
-                            do {
-                                let result = String(decoding: data, as: UTF8.self)
-                                callback?(Result.success(result))
-                            }
-
-                        } else {
-                            callback?(Result.failure(NetworkError.noData))
-                        }
-                    } else {
-                        callback?(Result.failure(NetworkError.invalidStatusCode))
-                    }
-                } else {
-                    callback?(Result.failure(NetworkError.invalidResponse))
-                }
+                return
             }
-        }
-        )
+            guard let response = response as? HTTPURLResponse  else {
+                callback?(Result.failure(NetworkError.invalidResponse))
+                return
+            }
+            if response.statusCode == 200 {
+                guard let data = data  else {
+                    callback?(Result.failure(NetworkError.noData))
+                    return
+                }
+                do {
+                    let result = String(decoding: data, as: UTF8.self)
+                    callback?(Result.success(result))
+                    }
+            } else {
+                callback?(Result.failure(NetworkError.invalidStatusCode))
+            }
+        })
         _currentTask?.resume()
     }
 
