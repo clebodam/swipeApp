@@ -8,6 +8,10 @@
 import Foundation
 
 
+struct NetWorkServiceResponse: Codable{
+    var data: [Profile]
+}
+
 struct Profile: Codable{
     var age: Int
     var birth: String
