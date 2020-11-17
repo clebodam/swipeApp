@@ -34,7 +34,7 @@ class HomePresenter : Presenter {
         viewModelData =  viewModelData?.filter {
             $0.uid != model.uid
         }
-      //  reloadData()
+        reloadData()
     }
 
     func startLoading() {

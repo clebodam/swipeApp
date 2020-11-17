@@ -49,6 +49,7 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
         setNeedsLayout()
         layoutIfNeeded()
         cardsNumber = datasource.cardsNumber()
+        print("card number: \(cardsNumber)")
         remainingCardsNumber = cardsNumber
         for i in 0..<min(cardsNumber,cardsToBeShown) {
             createCardView(cardView: card(at: i), atIndex: i )
@@ -59,8 +60,12 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
 
     func card(at index: Int) -> SwipeCardView {
         cardToReuse?.reset()
+        if cardToReuse != nil {
+            print("reuse card")
+        }
         let card =  cardToReuse ?? SwipeCardView()
         card.profileViewModel = self.dataSource?.cardInfo(at: index)
+        cardToReuse = nil
         return card
     }
 
