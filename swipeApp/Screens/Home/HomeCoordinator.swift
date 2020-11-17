@@ -19,6 +19,4 @@ class HomeCoordinator: Coordinator   {
         context?.registerCoordinator(coordinator: self)
         self.push(self.context)
     }
-
-
 }

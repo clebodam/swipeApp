@@ -18,13 +18,14 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
         configureStackContainer()
         configureNavigationBarButtonItem()
         stackContainer.delegate = self
-        stackContainer.reloadData()
         interactor?.getData()
     }
 
     //MARK: - Configurations
 
+   
     func updateViews() {
+        stackContainer.reloadData()
     }
 
     func register(interactor: Interactor) {
@@ -33,7 +34,7 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
 
     func configureStackContainer() {
         stackContainer.translatesAutoresizingMaskIntoConstraints = false
-        stackContainer.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: self.topbarHeight + 5, paddingLeft: 5, paddingBottom: 50, paddingRight: 5, width: 0, height: 0, enableInsets: false)
+        stackContainer.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: self.topbarHeight + 5, paddingLeft: 5, paddingBottom: stackContainer.paddingBottomNeeded(), paddingRight: 5, width: 0, height: 0, enableInsets: false)
         self.view.layoutIfNeeded()
     }
 
@@ -46,30 +47,29 @@ class HomeViewController: UIViewController, Coordinable, StoryboardInstantiatabl
 
     func startLoading() {
         DispatchQueue.main.async {
-                self.reloadButton.infiniteRotate()
-            }
+            self.reloadButton.infiniteRotate()
+        }
     }
 
     func stopLoading() {
         DispatchQueue.main.async {
-                self.reloadButton.removeAllAnimations()
-            }
+            self.reloadButton.removeAllAnimations()
+        }
     }
 
-    
     @objc func resetTapped() {
         interactor?.resetTapped()
     }
-
 }
 
 extension HomeViewController: SwipeCardContainerDelegate {
 
-    func didTap(on view: SwipeCardView, model: Profile?) {
+    func didTap(on view: SwipeCardView, model: ProfileProtocol?) {
         self.interactor?.didTap(on: view, model: model)
+
     }
 
-    func didSwipe(model: Profile?, direction: Direction) {
+    func didSwipe(model: ProfileProtocol?, direction: Direction) {
         self.interactor?.didSwipe(model: model, direction: direction)
     }
 }

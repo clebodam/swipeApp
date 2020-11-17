@@ -9,23 +9,29 @@ import Foundation
 
 
 struct NetWorkServiceResponse: Codable{
-    var data: [Profile]
+    var data: [ProfileRaw]
 }
 
-struct Profile: Codable{
+struct ProfileRaw: Codable {
     var age: Int
     var birth: String
     var emojis: [String]
     var gender: String
     var location: String
     var name: String
-    var photos: [Photos]
+    var photos: [PhotosRaw]
     var town: String
     var uid: String
- 
 }
 
-struct Photos: Codable{
+struct PhotosRaw: Codable{
     var type: String
     var url: String
 }
+
+
+
+
+
+
+

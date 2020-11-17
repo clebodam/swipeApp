@@ -22,7 +22,7 @@ enum NetworkError: Error {
     case serialization
 }
 
-typealias GetResponse = ([Profile], NetworkError?) -> Void
+typealias GetResponse = ([ProfileRaw], NetworkError?) -> Void
 typealias PostResponse = (Result<String, Error>) -> Void
 
 protocol NetWorkManagerProtocol {
@@ -46,7 +46,7 @@ class NetWorkManager: NetWorkManagerProtocol {
         session = URLSession(configuration: sessionCfg)
     }
 
-    internal  func get( route: String?, callback: ((Result<[Profile], Error>) -> Void)?) {
+    internal  func get( route: String?, callback: ((Result<[ProfileRaw], Error>) -> Void)?) {
         if let task = currentTask { task.cancel() }
         guard let url = URL(string: route ?? "") else {
             callback?(Result.failure(NetworkError.badUrl))
@@ -71,7 +71,7 @@ class NetWorkManager: NetWorkManagerProtocol {
                 do {
                     let decoder = JSONDecoder()
                     let responseObject  = try decoder.decode(NetWorkServiceResponse.self, from: data)
-                    let result: [Profile]  = responseObject.data
+                    let result: [ProfileRaw]  = responseObject.data
                     callback?(Result.success(result))
                 } catch {
                     print(error)
@@ -84,7 +84,7 @@ class NetWorkManager: NetWorkManagerProtocol {
         currentTask?.resume()
     }
 
-    public func getProfiles(callback: ((Result<[Profile], Error>) -> Void)?) {
+    public func getProfiles(callback: ((Result<[ProfileRaw], Error>) -> Void)?) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = PROFILES_HOST
@@ -134,8 +134,7 @@ class NetWorkManager: NetWorkManagerProtocol {
     }
 
     public  func getData(completion: @escaping GetResponse){
-
-        var profiles = [Profile]()
+        var profiles = [ProfileRaw]()
         var netWorkError: NetworkError? = nil
         getProfiles { (result) in
             switch result {

@@ -24,15 +24,15 @@ class HomeInteractor: Interactor {
         getData()
     }
 
-    func didSwipe(model: Profile?, direction: Direction) {
+    func didSwipe(model: ProfileProtocol?, direction: Direction) {
         print(  "swipe \(direction) \(String(describing: model))")
-        guard  let uid = model?.uid else {
+        guard let model = model else {
             return
         }
-        worker?.postLike(uid, direction == .right) { result in
-
+        worker?.postLike(model.uid, direction == .right) { result in
             switch result {
             case .success( _):
+                self.didSwipeModel(model)
                 print(" post OK")
             case .failure( _):
                 print(" post NOK")
@@ -40,19 +40,28 @@ class HomeInteractor: Interactor {
         }
     }
 
-    func didTap(on view: SwipeCardView, model: Profile?) {
+    func didTap(on view: SwipeCardView, model: ProfileProtocol?) {
         print(  "tap \(String(describing: model))")
     }
 
     func getData() {
         self.homePresenter?.startLoading()
         worker?.getData(completion: { profiles, error in
-            self.homePresenter?.viewModelData = profiles
-            self.homePresenter?.reloadData()
+            let model = profiles.map {
+                ProfileViewModel($0) as ProfileProtocol
+            }
+            self.updateModel(model)
             self.homePresenter?.stopLoading()
-
         })
     }
 
+    func updateModel(_ model: [ProfileProtocol]) {
+        self.homePresenter?.viewModelData  = model
+        self.homePresenter?.reloadData()
+    }
 
+    func didSwipeModel(_ model: ProfileProtocol) {
+        self.homePresenter?.didSwipeModel(model)
+
+    }
 }

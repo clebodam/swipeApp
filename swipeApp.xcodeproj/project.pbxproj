@@ -28,6 +28,7 @@
 		6DC24D64255AD61800B0D423 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC24D63255AD61800B0D423 /* NetworkService.swift */; };
 		6DC24D6D255AD6BC00B0D423 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC24D6C255AD6BC00B0D423 /* Profile.swift */; };
 		6DC24D75255AE7DF00B0D423 /* UIIMageView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC24D74255AE7DF00B0D423 /* UIIMageView+Network.swift */; };
+		6DDAF19B255D9B3D00CB9ACC /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAF19A255D9B3D00CB9ACC /* ViewModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		6DC24D63255AD61800B0D423 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		6DC24D6C255AD6BC00B0D423 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		6DC24D74255AE7DF00B0D423 /* UIIMageView+Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIIMageView+Network.swift"; sourceTree = "<group>"; };
+		6DDAF19A255D9B3D00CB9ACC /* ViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				6DC24D2F255A85C600B0D423 /* HomeInteractor.swift */,
+				6DDAF19A255D9B3D00CB9ACC /* ViewModels.swift */,
 				6DC24D4B255A8C6900B0D423 /* HomePresenter.swift */,
 				6DC24CE62559744B00B0D423 /* HomeCoordinator.swift */,
 				6DC24CA32559728900B0D423 /* HomeViewController.swift */,
@@ -379,6 +382,7 @@
 				6DC24D262559A2F600B0D423 /* UIView+Anchors.swift in Sources */,
 				6DC24D05255985DF00B0D423 /* SwipeCardView.swift in Sources */,
 				6DC24D30255A85C600B0D423 /* HomeInteractor.swift in Sources */,
+				6DDAF19B255D9B3D00CB9ACC /* ViewModels.swift in Sources */,
 				6DC24D44255A8BDC00B0D423 /* Presenter.swift in Sources */,
 				6DC24D64255AD61800B0D423 /* NetworkService.swift in Sources */,
 				6DC24D3E255A8B9B00B0D423 /* Interactor.swift in Sources */,

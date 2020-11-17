@@ -8,16 +8,16 @@
 import UIKit
 
 protocol SwipeCardContainerDelegate: class {
-    func didSwipe(model:Profile?, direction: Direction)
-    func didTap(on view: SwipeCardView, model: Profile?)
+    func didSwipe(model:ProfileProtocol?, direction: Direction)
+    func didTap(on view: SwipeCardView, model: ProfileProtocol?)
 }
 
 class SwipeCardContainer: UIView, SwipeCardsDelegate {
 
     //MARK: - Properties
-
+    var cardToReuse: SwipeCardView?
     var cardsNumber: Int = 0
-    var cardsToBeShown: Int = 20
+    var cardsToBeShown: Int = 5
     var cardViews : [SwipeCardView] = []
     var remainingCardsNumber: Int = 0
     let horizontalInset: CGFloat = 4.0
@@ -33,11 +33,14 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         backgroundColor = .clear
-
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func paddingBottomNeeded() -> CGFloat {
+        return horizontalInset * CGFloat(cardsToBeShown)
     }
 
     func reloadData() {
@@ -48,11 +51,18 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
         cardsNumber = datasource.cardsNumber()
         remainingCardsNumber = cardsNumber
         for i in 0..<min(cardsNumber,cardsToBeShown) {
-            createCardView(cardView: datasource.card(at: i), atIndex: i )
+            createCardView(cardView: card(at: i), atIndex: i )
         }
     }
 
     //MARK: - Configurations
+
+    func card(at index: Int) -> SwipeCardView {
+        cardToReuse?.reset()
+        let card =  cardToReuse ?? SwipeCardView()
+        card.profileViewModel = self.dataSource?.cardInfo(at: index)
+        return card
+    }
 
     private func createCardView(cardView: SwipeCardView, atIndex index: Int) {
         cardView.delegate = self
@@ -73,18 +83,21 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
     }
 
     private func reset() {
+        cardToReuse = nil
         for cardView in visibleCards {
             cardView.removeFromSuperview()
         }
         cardViews = []
     }
 
-    func swipeDidEnd(on view: SwipeCardView, direction: Direction, model: Profile?) {
+    func swipeDidEnd(on view: SwipeCardView, direction: Direction, model: ProfileProtocol?) {
         guard let datasource = dataSource else { return }
+        cardToReuse = view
         view.removeFromSuperview()
+
         if remainingCardsNumber > 0 {
             let newIndex = datasource.cardsNumber() - remainingCardsNumber
-            createCardView(cardView: datasource.card(at: newIndex), atIndex: newIndex)
+            createCardView(cardView: card(at: newIndex), atIndex: newIndex)
             for (cardIndex, cardView) in visibleCards.reversed().enumerated() {
                 UIView.animate(withDuration: 0.2, animations: {
                 cardView.center = self.center
@@ -92,7 +105,6 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
                     self.layoutIfNeeded()
                 })
             }
-
         }else {
             for (cardIndex, cardView) in visibleCards.reversed().enumerated() {
                 UIView.animate(withDuration: 0.2, animations: {
@@ -105,7 +117,7 @@ class SwipeCardContainer: UIView, SwipeCardsDelegate {
         self.delegate?.didSwipe(model: model, direction: direction)
     }
 
-    func didTap(on view: SwipeCardView, model: Profile?) {
+    func didTap(on view: SwipeCardView, model: ProfileProtocol?) {
         self.delegate?.didTap(on: view, model: model)
     }
 }

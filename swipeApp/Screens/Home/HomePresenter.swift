@@ -22,13 +22,19 @@ class HomePresenter : Presenter {
         }
     }
 
-
-    var viewModelData: [Profile]?
+    var viewModelData: [ProfileProtocol]?
 
     func reloadData() {
         DispatchQueue.main.async {
-            self.homeScreen?.stackContainer.reloadData()
+            self.homeScreen?.updateViews()
         }
+    }
+
+    func didSwipeModel(_ model: ProfileProtocol) {
+        viewModelData =  viewModelData?.filter {
+            $0.uid != model.uid
+        }
+      //  reloadData()
     }
 
     func startLoading() {
@@ -38,6 +44,10 @@ class HomePresenter : Presenter {
     func stopLoading() {
         self.homeScreen?.stopLoading()
     }
+
+    func profileForIndex(_ index : Int) -> ProfileProtocol? {
+        return viewModelData?[index]
+    }
 }
 
 extension HomePresenter : SwipeCardsDataSource {
@@ -46,9 +56,8 @@ extension HomePresenter : SwipeCardsDataSource {
         return viewModelData?.count ?? 0
     }
 
-    func card(at index: Int) -> SwipeCardView {
-        let card = SwipeCardView()
-        card.dataSource = viewModelData?[index]
-        return card
+    func cardInfo (at index: Int) -> ProfileProtocol? {
+        return viewModelData?[index]
     }
+
 }
